@@ -9,12 +9,12 @@ import * as Plyr from 'plyr';
 })
 export class AppComponent {
   title = 'npr2';
-
   player: Plyr;
+  offset = 0;
 
   audioSources = [
     {
-      src: 'http://localhost:8001',
+      src: 'http://loomba.kozow.com:8001',
       type: 'audio/mp3',
     }
   ];
@@ -22,23 +22,23 @@ export class AppComponent {
   played(event: Plyr.PlyrEvent) {
     console.log('played', event);
     console.log(this.audioSources);
-
   }
 
   playLive(): void {
+    this.offset = 0;
     this.audioSources = [
       {
-        src: 'http://localhost:8001',
+        src: 'http://loomba.kozow.com:8001',
         type: 'audio/mp3',
       }
     ];
   }
 
   playTop(): void {
-    var offset = new Date().getMinutes()*60 + new Date().getSeconds();
+    this.offset = new Date().getMinutes()*60 + new Date().getSeconds() - 30; // 60s fudge bc the player is delayed anyway
     this.audioSources = [
       {
-        src: 'http://localhost:8001/test?offset='+offset,
+        src: 'http://loomba.kozow.com:8001/test?offset='+this.offset,
         type: 'audio/mp3',
       }
     ];

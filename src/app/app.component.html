@@ -1,14 +1,12 @@
 
-poop  
-
+{{ offset / 60 | number:'1.0-0' }} minutes behind live 
+<br><br><br>
 
 <button (click)="playLive()">Play Live</button>
 
 <button (click)="playTop()">Play Top of Hour</button>
 
-
-<div plyr style="width: 640px;" plyrTitle="Audio" plyrType="audio" [plyrPlaysInline]="true" [plyrCrossOrigin]="true"
+<div plyr style="width: 320px;" plyrTitle="Audio" plyrType="audio" [plyrPlaysInline]="true" [plyrCrossOrigin]="true"
       (plyrInit)="player = $event" [plyrSources]="audioSources" (plyrPlay)="played($event)" (plyrReady)="ready()"></div>
-
 
 <router-outlet></router-outlet>
