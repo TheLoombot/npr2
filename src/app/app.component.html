@@ -1,13 +1,23 @@
 
 {{ offset / 60 | number:'1.1-2' }} minutes behind live 
+
+
 <br><br><br>
 
-<button (click)="playTop()" [disabled]="atTop()">Top of Hour</button>
+<button class="tappable" (click)="playTop()" [disabled]="atTop()">Start<p>⏮</p></button>
 
-<button (click)="rewind()" [disabled]="atTop() || !isPlaying()">-15s</button>
-<button (click)="forward()" [disabled]="isLive() || !isPlaying()">+15s</button>
+<button class="tappable" (click)="rewind()" [disabled]="atTop() || !isPlaying()">-{{seekValue}}s<p>⏪</p></button>
 
-<button (click)="playLive()" [disabled]="isLive()">Play Live</button>
+<button class="tappable" (click)="playPauseToggle()">
+  <span *ngIf="!isPlaying()">Play</span>
+  <span *ngIf="isPlaying()">Pause</span>
+  <p *ngIf="!isPlaying()">▶️</p>
+  <p *ngIf="isPlaying()">⏸</p>
+</button>
+
+<button class="tappable" (click)="forward()" [disabled]="isLive() || !isPlaying()">+{{seekValue}}s<p>⏩</p></button>
+
+<button class="tappable" (click)="playLive()" [disabled]="isLive()">Live<p>⏭</p></button>
 
 <div plyr style="width: 320px;" plyrTitle="Audio" plyrType="audio" [plyrPlaysInline]="true" [plyrCrossOrigin]="true"
       (plyrInit)="player = $event" [plyrSources]="audioSources" (plyrPlay)="played($event)" (plyrReady)="ready()"

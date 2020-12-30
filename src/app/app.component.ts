@@ -12,15 +12,13 @@ export class AppComponent {
   player: Plyr;
   offset = 0;
   hostname = 'http://loomba.kozow.com:8001/test';
-  playerOptions = { controls: ['play','volume'] };
+  playerOptions = { controls: ['volume'] };
   seekValue = 15; // seconds to seek back/fwd by
+  audioSources;
 
-  audioSources = [
-    {
-      src: this.hostname,
-      type: 'audio/mp3',
-    }
-  ];
+  constructor() { 
+    this.setAudioSource();
+  }
 
   played(event: Plyr.PlyrEvent) {
     console.log('played', event);
@@ -77,13 +75,13 @@ export class AppComponent {
     ];
   }
 
+  playPauseToggle(): void {
+    if (this.isPlaying()) this.player.pause();
+    else this.player.play();
+  }
+
   forward(): void{
     this.offset = Math.max(this.offset-this.seekValue, 0);
-    // if (this.offset <= 0) {
-    //   this.offset = 0;
-    // } else{
-    //   this.offset = this.offset-15;
-    // }
     this.setAudioSource();
   }
 
