@@ -11,10 +11,13 @@ export class AppComponent {
   title = 'npr2';
   player: Plyr;
   offset = 0;
+  hostname = 'http://loomba.kozow.com:8001/test';
+  playerOptions = { controls: ['play','volume'] };
+  seekValue = 15; // seconds to seek back/fwd by
 
   audioSources = [
     {
-      src: 'http://loomba.kozow.com:8001',
+      src: this.hostname,
       type: 'audio/mp3',
     }
   ];
@@ -26,26 +29,62 @@ export class AppComponent {
 
   playLive(): void {
     this.offset = 0;
-    this.audioSources = [
-      {
-        src: 'http://loomba.kozow.com:8001',
-        type: 'audio/mp3',
-      }
-    ];
+    this.setAudioSource();
   }
 
   playTop(): void {
-    this.offset = new Date().getMinutes()*60 + new Date().getSeconds() - 30; // 60s fudge bc the player is delayed anyway
-    this.audioSources = [
-      {
-        src: 'http://loomba.kozow.com:8001/test?offset='+this.offset,
-        type: 'audio/mp3',
-      }
-    ];
+    this.offset = this.calcOffset();
+    this.setAudioSource();
   }
 
   ready(): void {
     this.player.play();
+  }
+
+  calcOffset(): number {
+    var now = new Date();
+    return now.getMinutes()*60 + now.getSeconds() - 30; // fudge bc the player is delayed anyway
+  }
+
+  atTop(): boolean {
+    if (this.calcOffset() <= this.offset + 2) return true; // disabled
+    else {
+      return false; // enabled
+    }
+  }
+
+  isLive(): boolean {
+    if (this.offset <= 0 && this.isPlaying()) return true;
+    else return false;
+  }
+
+  isPlaying(): boolean {
+    return this.player?.playing || false;
+  }
+
+  rewind(): void {
+    this.offset = Math.min(this.calcOffset(), this.offset+this.seekValue);
+    // this.offset = this.offset+this.seekValue;
+    this.setAudioSource();
+  }
+
+  setAudioSource() {
+    this.audioSources = [
+      {
+        src: this.hostname + '?offset=' + this.offset,
+        type: 'audio/mp3',
+      }
+    ];
+  }
+
+  forward(): void{
+    this.offset = Math.max(this.offset-this.seekValue, 0);
+    // if (this.offset <= 0) {
+    //   this.offset = 0;
+    // } else{
+    //   this.offset = this.offset-15;
+    // }
+    this.setAudioSource();
   }
 
 }
